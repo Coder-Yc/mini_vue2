@@ -1,4 +1,10 @@
-let a = 1
-console.log('123')
+import { initMixin } from './init'
 
-export default a
+function Vue(options) {
+  //options 就是传入的options api
+  this._init(options)
+}
+
+initMixin(Vue)
+
+export default Vue

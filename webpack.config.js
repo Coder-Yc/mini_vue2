@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { HotModuleReplacementPlugin } = require('webpack')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
@@ -10,12 +11,16 @@ module.exports = {
     filename: 'vue.js',
     library: {
       name: 'Vue',
-      type: 'umd'
-      // export: "default",
+      type: 'umd',
+      export: 'default'
     }
   },
   //mode中默认加入了devtool的属性
   mode: 'development',
+  devServer: {
+    hot: true,
+    static: './dist'
+  },
   // devtool: "eval-source-map",
   module: {
     rules: [
@@ -33,8 +38,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: './index.html'
+      template: './index.html',
+      scriptLoading: 'blocking'
     })
   ]
 }
