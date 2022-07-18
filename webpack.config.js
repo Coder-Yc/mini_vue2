@@ -17,9 +17,13 @@ module.exports = {
   },
   //mode中默认加入了devtool的属性
   mode: 'development',
+  target: 'web',
   devServer: {
     hot: true,
-    static: './dist'
+    port: 8081,
+    open: true,
+    watchFiles: ['./src/index.html']
+    // contentBase: path.resolve(__dirname, 'dist')
   },
   // devtool: "eval-source-map",
   module: {

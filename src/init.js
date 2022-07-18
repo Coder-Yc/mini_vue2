@@ -1,3 +1,4 @@
+import { initState } from './State.js'
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
     //由于其他原型方法上也需要使用options, 所以把options挂载到实例上
@@ -6,17 +7,4 @@ export function initMixin(Vue) {
     //初始化数据状态(options)
     initState(vm)
   }
-}
-
-function initState(vm) {
-  const opts = vm.$options
-  if (opts.data) {
-    initData(vm)
-  }
-}
-
-function initData(vm) {
-  let data = vm.$options.data
-  data = typeof data === 'function' ? data.call(vm) : data
-  console.log(data)
 }
