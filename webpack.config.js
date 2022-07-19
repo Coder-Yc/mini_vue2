@@ -21,8 +21,7 @@ module.exports = {
   devServer: {
     hot: true,
     port: 8081,
-    open: true,
-    watchFiles: ['./src/index.html']
+    open: true
     // contentBase: path.resolve(__dirname, 'dist')
   },
   // devtool: "eval-source-map",
