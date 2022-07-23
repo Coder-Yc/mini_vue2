@@ -43,7 +43,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: './index2.html',
       scriptLoading: 'blocking'
     })
   ]

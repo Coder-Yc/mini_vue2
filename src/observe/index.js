@@ -9,7 +9,7 @@ class Observer {
   constructor(data) {
     //给这个data添加一个属性this指向Observer
     //同时给对象加了一个标识,如果数据上有这个属性就说明这个属性被观测过了
-    console.log(data)
+    // console.log(data)
     Object.defineProperty(data, '__ob__', {
       enumerable: false,
       value: this
@@ -43,12 +43,12 @@ function defineReactive(target, key, value) {
   Object.defineProperty(target, key, {
     get() {
       //取值的时候会执行get
-      console.log('获取到代理的值', value)
+      // console.log('获取到代理的值', value)
       return value
     },
     set(newValue) {
       //修改值的时候会触发set
-      console.log('设置到代理的值', newValue)
+      // console.log('设置到代理的值', newValue)
       //对于传过来的如果是对象要再进行代理
       observer(newValue)
       value = newValue === value ? value : newValue
@@ -58,7 +58,7 @@ function defineReactive(target, key, value) {
 
 export function observer(data) {
   //对对象进行劫持
-  console.log(typeof data)
+  // console.log(typeof data)
   if (typeof data !== 'object' || data === null) return
   if (data.__ob__ instanceof Observer) return data.__ob__
   //如果一个对象属性被劫持过了,那就不需要再被劫持了
