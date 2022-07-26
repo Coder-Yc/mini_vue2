@@ -6,7 +6,7 @@ function genProps(attrs) {
    * 遍历属性的数组用一个str组成一个key:value形式的字符串
    * 其中需要对style样式做特殊处理(相当于qs库)
    * 通过;对attr做一个分割,然后对里面的:就行分割,组成key:value形式
-   * 
+   *
    */
   let str = ''
   // console.log(attrs)
@@ -109,7 +109,14 @@ export function compileToRenderFunction(template) {
   const ast = parseHtml(template)
 
   //2. 生成render方法(render方法执行后的返回结果就是虚拟Dom)
-  console.log(ast)
+  let code = codegen(ast)
 
-  console.log(codegen(ast))
+  /**
+   * 模版引擎的实现原理就是with + new Function
+   * with的作用就是把code里的变量作用域放到with传来的this中
+   */
+  code = `with(this) {return ${code}}`
+  const render = new Function(code)
+  // console.log(render)
+  return render
 }

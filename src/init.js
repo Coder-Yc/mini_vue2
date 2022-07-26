@@ -1,5 +1,6 @@
 import { initState } from './State.js'
 import { compileToRenderFunction } from './compile/index'
+import { mountComponent } from './lifecycle'
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
     //由于其他原型方法上也需要使用options, 所以把options挂载到实例上
@@ -26,8 +27,14 @@ export function initMixin(Vue) {
       } else {
         template = el.outerHTML
       }
-      // console.log(template)
-      compileToRenderFunction(template)
+      /**
+       * 通过compileToRenderFunction拿到一个render函数并挂在到ops实例上
+       */
+      const render = compileToRenderFunction(template)
+      ops.render = render
     }
+    console.log(ops.render)
+
+    mountComponent(vm, el)
   }
 }

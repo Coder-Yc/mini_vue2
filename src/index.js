@@ -1,4 +1,5 @@
 import { initMixin } from './init'
+import { initLifecycle } from './lifecycle'
 
 function Vue(options) {
   //options 就是传入的options api
@@ -6,5 +7,5 @@ function Vue(options) {
 }
 
 initMixin(Vue)
-
+initLifecycle(Vue)
 export default Vue

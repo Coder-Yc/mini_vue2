@@ -10,11 +10,22 @@
 
 
 <body>
-    <div id="app" style="color: red; background-color: blue;">
-        <div class="content" style="color: red;">
+    <div id="app" style="color: red; background-color: pink;">
+        <div class="content" style="color: red;" key="123">
             {{name}} hello {{age}} world
         </div>
-        <span>{{age}}</span>
+        <ul>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+            <li>{{age}}</li>
+        </ul>
     </div>
 </body>
 <script>
@@ -29,9 +40,6 @@
         el: '#app',
         // template: '<div>Hello world</div>'
     })
-    // console.log(vm._data.name);
-    // vm._data.name = '123123123'
-    console.log('---------------', vm.name);
     vm.age = 899
 </script>
 
