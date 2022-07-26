@@ -5,11 +5,10 @@ function genProps(attrs) {
    * 对属性做处理
    * 遍历属性的数组用一个str组成一个key:value形式的字符串
    * 其中需要对style样式做特殊处理(相当于qs库)
-   * 通过;对attr做一个分割,然后对里面的:就行分割,组成key:value形式
+   * 通过对attr做一个分割,然后对里面的:就行分割,组成key:value形式
    *
    */
   let str = ''
-  // console.log(attrs)
   for (let i = 0; i < attrs.length; i++) {
     let attr = attrs[i]
     if (attr.name === 'style') {
@@ -78,7 +77,7 @@ function gen(node) {
       if (text.slice(lastIndex)) {
         tokens.push(`'${text.slice(lastIndex)}'`)
       }
-      // console.log(tokens)
+
       /**
        * 这里返回的是一个tokens组成的一个语句
        */
@@ -117,6 +116,5 @@ export function compileToRenderFunction(template) {
    */
   code = `with(this) {return ${code}}`
   const render = new Function(code)
-  // console.log(render)
   return render
 }
