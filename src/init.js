@@ -43,6 +43,7 @@ export function initMixin(Vue) {
       const render = compileToRenderFunction(template)
       ops.render = render
     }
+
     mountComponent(vm, el)
   }
 }

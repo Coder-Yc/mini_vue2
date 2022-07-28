@@ -11,21 +11,7 @@
 
 <body>
     <div id="app" style="color: red; background-color: pink;">
-        <div class="content" style="color: red;" key="123">
-            hello {{name}} world
-        </div>
-        <ul>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-            <li>{{age}}</li>
-        </ul>
+        {{age}} {{name}} {{age}}
     </div>
 </body>
 <script>
@@ -40,7 +26,15 @@
         el: '#app',
         // template: '<div>Hello world</div>'
     })
+
+    // setTimeout(() => {
+    //     vm.age = '15'
+
+    // }, 2000);
     vm.age = 899
+    vm.$nextTick(() => {
+        console.log('age的值是', app.innerHTML);
+    })
 </script>
 
 </html>

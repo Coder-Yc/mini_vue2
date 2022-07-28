@@ -3,7 +3,7 @@
  * @returns
  */
 import { newArrayProto } from './array'
-
+import Dep from './dep'
 class Observer {
   constructor(data) {
     /**
@@ -49,18 +49,36 @@ class Observer {
 }
 
 function defineReactive(target, key, value) {
-  //这里的value相当于是一个闭包,在这个闭包内,get和set处理的值都是value
-  observer(value) //对所有的对象都进行劫持,如果value是对象,调用observe,里面有判断了
+  /**
+   * 这里的value相当于是一个闭包,在这个闭包内,get和set处理的值都是value
+   * observer对所有的对象都进行劫持,如果value是对象,调用observe
+   * 然后new一个Dep实例,每一个属性都有一个dep实例,相当于是每一个属性都有一个dep
+   */
+  observer(value)
+  let dep = new Dep()
   Object.defineProperty(target, key, {
+    /**
+     *当来取属性的时候就会判断Dep上有没有targe这个属性,相当于是刚刚在new Watcher的时候把watcher挂载到Dep.target上了
+     * 然后通过defineProperty对属性就行劫持
+     * 首先判断Dep.target有没有值,如果有就调用dep的depend方法,在这个方法里调用Dep.target也就是当前watcher上的addDep方法把当前dep添加到watcher维护的数组里
+     * 在那边又会调用当前dep的addSub方法,把这个watcher添加到dep维护的subs数组中,这样就是相互保存了
+     */
     get() {
       //取值的时候会执行get
+      if (Dep.target) {
+        dep.depend()
+      }
       return value
     },
+    /**
+     * 修改值的时候会触发set,对于传过来的如果是对象要再进行代理
+     * 然后出发dep上的notify去通知更新
+     * notify再去通知subs里的watcher去调用update方法
+     */
     set(newValue) {
-      //修改值的时候会触发set
-      //对于传过来的如果是对象要再进行代理
       observer(newValue)
       value = newValue === value ? value : newValue
+      dep.notify()
     }
   })
 }

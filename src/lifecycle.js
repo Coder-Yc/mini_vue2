@@ -1,4 +1,5 @@
 import { createElementVNode, createTextVNode } from './vdom/index'
+import Watcher from './observe/watch.js'
 
 function createElm(VNode) {
   /**
@@ -56,7 +57,7 @@ function patch(oldVNode, VNode) {
     let newElm = createElm(VNode)
     parentElm.insertBefore(newElm, parentElm.nextSibling)
     parentElm.removeChild(elm)
-    console.log(newElm)
+
     return newElm
   } else {
     /**
@@ -115,9 +116,15 @@ export function initLifecycle(Vue) {
 export function mountComponent(vm, el) {
   vm.$el = el
   /**
-   * 调用render方法产生虚拟节点,虚拟dom
+   * 相当于是每挂载一个板块或者说是组件都会去new一个watcher实例,相当于是依赖
+   * 并且传过去当前组件实例,和更新渲染组件的函数
+   * 剩下的事都在Watcher的类里去做
    */
-  vm._update(vm._render())
+  const updateComponent = () => {
+    vm._update(vm._render())
+  }
+  new Watcher(vm, updateComponent, true)
+
 
   /**
    * 根据虚拟dom产生真实dom
