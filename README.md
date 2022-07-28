@@ -1,6 +1,8 @@
 # mini_vue2 的实现
 
-### 实现的功能(不断更新)
+<p style="color: green;">代码中每一个函数都有注释,能帮助更好的理解 vue2 中的方法实现</p>
+
+## 实现的功能(不断更新)
 
 - webpack 搭建环境
 
@@ -21,3 +23,67 @@
 - 实现 Vue 中的依赖收集
 
 - 实现异步更新方法,nextTick 方法
+
+## 使用方法
+
+### 下载文件
+
+首先`git clone`或者`download zip`包下来代码
+
+```
+git clone git@github.com:Coder-Yc/mini_vue2.git
+```
+
+### 安装依赖
+
+```
+npm install
+```
+
+### 编译并且热更新模版
+
+```
+npm run dev
+```
+
+### 编译打包并且运行文件(没有热更新)
+
+```
+npm run serve
+```
+
+### 统一文件样式(可忽略)
+
+```
+npm run prettier
+```
+
+### 使用 mini_vue2
+
+在`index.html`中修改 data 值,任何你在 vue2 中能使用的方式都能实现(还未开发完全的功能除外),模版解析与响应式和异步更新已经完成好例如下面例子
+
+```js
+<body>
+    <div id="app" style="color: red; background-color: pink;">
+        {{age}} {{name}} {{age}}
+    </div>
+</body>
+<script>
+    const vm = new Vue({
+        data() {
+            return {
+                name: 'qwe',
+                age: 21,
+                address: ['123', '456'],
+            }
+        },
+        el: '#app',
+    })
+
+    vm.age = 899
+    vm.$nextTick(() => {
+        console.log('age的值是', app.innerHTML);
+    })
+</script>
+
+```
