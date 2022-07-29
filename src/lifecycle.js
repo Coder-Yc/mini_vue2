@@ -41,7 +41,6 @@ function patchProps(el, data) {
 }
 
 function patch(oldVNode, VNode) {
-  //debugger
   /**
    * patch这个方法是用来把虚拟节点挂载到真实dom上的
    * 首先判断传过来的旧的节点是不是标签类型
@@ -125,7 +124,6 @@ export function mountComponent(vm, el) {
   }
   new Watcher(vm, updateComponent, true)
 
-
   /**
    * 根据虚拟dom产生真实dom
    */
@@ -133,4 +131,18 @@ export function mountComponent(vm, el) {
   /**
    * 插入到el上
    */
+}
+
+export function callHooks(vm, hook) {
+  /**
+   * @param {*当前实例} vm
+   * @param {*当前引用生命周期钩子} hook
+   * 调用这个函数传过来当前vue实例和,生命周期钩子,去合并到options上查找这个合并的钩子,如果存在这个合并的数组就调用
+   * 追忆生命周期勾子上的this值都是当前实例
+   */
+  // debugger
+  const handles = vm.$options[hook]
+  if (handles) {
+    handles.forEach((handle) => handle.call(vm))
+  }
 }

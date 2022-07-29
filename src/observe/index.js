@@ -49,7 +49,7 @@ class Observer {
 }
 
 function defineReactive(target, key, value) {
-  /**
+  /** 
    * 这里的value相当于是一个闭包,在这个闭包内,get和set处理的值都是value
    * observer对所有的对象都进行劫持,如果value是对象,调用observe
    * 然后new一个Dep实例,每一个属性都有一个dep实例,相当于是每一个属性都有一个dep

@@ -9,7 +9,6 @@ let id = 0
  * 然后立马去调用get函数,在get函数里面去把当前watcher赋值给Dep的静态属性,这样就能在全局任何一个地方通过Dep.target拿到当前watcher
  * 然后去调用getter保存的函数,去触发识图更新
  * 在触发的过程调用render函数,render函数就会去取那些属性的值,就会触发属性的get,接着去看defineReactive这个函数
- *
  */
 class Watcher {
   constructor(vm, fn, options) {
