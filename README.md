@@ -21,10 +21,13 @@
 -   通过虚拟 dom 替换到到真实 dom 上
 
 -   实现 Vue 中的依赖收集
+    ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/%E6%9B%B4%E6%96%B0%E5%90%8E%E5%80%BC.png)
 
 -   实现异步更新方法,nextTick 方法
+    ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/nextTick%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0.png)
 
 -   实现 mixin 方法和生命周期功能
+-   ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8Emixin.png)
 
 ## 使用方法
 
