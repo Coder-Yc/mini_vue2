@@ -1,30 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-</head>
-
-
-<body>
-</body>
-<script>
-  const vm = new Vue({
-    data() {
-      return {
-        name: 'qwe',
-        age: 21,
-        address: ['123', '456'],
-      }
-    }
-  })
-  // console.log(vm._data.name);
-  // vm._data.name = '123123123'
-  console.log('---------------', vm.name);
-  vm.age = 899
-</script>
-
+    <body></body>
+    <script>
+        const vm = new Vue({
+            data() {
+                return {
+                    name: 'qwe',
+                    age: 21,
+                    address: ['123', '456']
+                }
+            }
+        })
+        // console.log(vm._data.name);
+        // vm._data.name = '123123123'
+        console.log('---------------', vm.name)
+        vm.age = 899
+    </script>
 </html>

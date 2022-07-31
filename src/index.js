@@ -11,8 +11,8 @@ import { initGlobalApi } from './global.js'
  */
 
 function Vue(options) {
-  //options 就是传入的options api
-  this._init(options)
+    //options 就是传入的options api
+    this._init(options)
 }
 Vue.prototype.$nextTick = nextTick
 
@@ -20,4 +20,3 @@ initMixin(Vue)
 initLifecycle(Vue)
 initGlobalApi(Vue)
 export default Vue
-

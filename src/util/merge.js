@@ -9,39 +9,39 @@
 const stratas = {}
 const LIFECYCLE = ['beforeCreated', 'created', 'beforeMounted', 'mounted']
 LIFECYCLE.forEach((hook) => {
-  stratas[hook] = function (p, c) {
-    /**
-     * {} {created: function() {}}    =>    {created:[fn]}
-     * {created: [fn]} {created: function() {}}   =>    {created: [fn,fn]}
-     */
-    if (c) {
-      if (p) {
-        return p.concat(c)
-      } else {
-        return [c]
-      }
-    } else {
-      return p
+    stratas[hook] = function (p, c) {
+        /**
+         * {} {created: function() {}}    =>    {created:[fn]}
+         * {created: [fn]} {created: function() {}}   =>    {created: [fn,fn]}
+         */
+        if (c) {
+            if (p) {
+                return p.concat(c)
+            } else {
+                return [c]
+            }
+        } else {
+            return p
+        }
     }
-  }
 })
 
 export function mergeOptions(parent, children) {
-  const options = {}
-  for (let key in parent) {
-    mergeFile(key)
-  }
-  for (let key in children) {
-    if (!parent[key]) {
-      mergeFile(key)
+    const options = {}
+    for (let key in parent) {
+        mergeFile(key)
     }
-  }
-  function mergeFile(key) {
-    if (stratas[key]) {
-      options[key] = stratas[key](parent[key], children[key])
-    } else {
-      options[key] = children[key] || parent[key]
+    for (let key in children) {
+        if (!parent[key]) {
+            mergeFile(key)
+        }
     }
-  }
-  return options
+    function mergeFile(key) {
+        if (stratas[key]) {
+            options[key] = stratas[key](parent[key], children[key])
+        } else {
+            options[key] = children[key] || parent[key]
+        }
+    }
+    return options
 }

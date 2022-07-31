@@ -8,37 +8,25 @@
     <title>Document</title>
 </head>
 
-
 <body>
-    <div id="app" style="color: red; background-color: pink;">
-        {{age}} {{name}} {{age}}
-    </div>
+    <div id="app" style="color: red; background-color: pink">{{num}}</div>
 </body>
 <script>
-    Vue.mixin({
-        created: function () {
-            console.log('1111111');
-        }
-    })
-    Vue.mixin({
-        created: function () {
-            console.log('2222222');
-        }
-    })
     const vm = new Vue({
-        created: function () {
-            console.log('3333333');
-        },
         data() {
             return {
-                name: 'qwe',
-                age: 21,
-                address: ['123', '456'],
+                num: [1, 2, 3, [1, 2]]
             }
         },
-        el: '#app',
-        // template: '<div>Hello world</div>'
+        el: '#app'
     })
+    setTimeout(() => {
+        // vm.num.push(100)
+        // debugger
+        console.log(vm.num);
+        vm.num[3].push(111)
+        // vm.num.__ob__.dep.notify()   //$set原理
+    }, 1000);
 </script>
 
 </html>

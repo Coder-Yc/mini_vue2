@@ -11,37 +11,37 @@ let id = 0
  * 在触发的过程调用render函数,render函数就会去取那些属性的值,就会触发属性的get,接着去看defineReactive这个函数
  */
 class Watcher {
-  constructor(vm, fn, options) {
-    this.id = id++
-    this.getter = fn
-    this.deps = []
-    this.depsId = new Set()
-    this.get()
-  }
-  get() {
-    Dep.target = this
-    this.getter()
-    Dep.target = null
-  }
-  /**
-   * @param {传过来的当前dep} dep
-   * 这边判断depsId里有没有那个id 如果有就不添加了,
-   */
-  addDep(dep) {
-    let id = dep.id
-    if (!this.depsId.has(id)) {
-      this.deps.push(dep)
-      this.depsId.add(id)
-      dep.addSub(this)
+    constructor(vm, fn, options) {
+        this.id = id++
+        this.getter = fn
+        this.deps = []
+        this.depsId = new Set()
+        this.get()
     }
-  }
-  update() {
-    queueWatcher(this)
-  }
-  run() {
-    console.log('更新了....')
-    this.get()
-  }
+    get() {
+        Dep.target = this
+        this.getter()
+        Dep.target = null
+    }
+    /**
+     * @param {传过来的当前dep} dep
+     * 这边判断depsId里有没有那个id 如果有就不添加了,
+     */
+    addDep(dep) {
+        let id = dep.id
+        if (!this.depsId.has(id)) {
+            this.deps.push(dep)
+            this.depsId.add(id)
+            dep.addSub(this)
+        }
+    }
+    update() {
+        queueWatcher(this)
+    }
+    run() {
+        console.log('更新了....')
+        this.get()
+    }
 }
 export default Watcher
 
@@ -60,29 +60,29 @@ let has = {}
 let pending = false
 //刷新操作
 function flushScheduleQueue() {
-  let flushQueue = queue.slice(0)
-  queue = []
-  has = {}
-  pending = false
-  for (let i = 0; i < flushQueue.length; i++) {
-    flushQueue[i].run()
-  }
+    let flushQueue = queue.slice(0)
+    queue = []
+    has = {}
+    pending = false
+    for (let i = 0; i < flushQueue.length; i++) {
+        flushQueue[i].run()
+    }
 }
 
 function queueWatcher(watcher) {
-  /**
-   * 如果相同的watcher进来,id保存起来了,就不会执行!has[id]这个里面的东西
-   * 但是这个时候它的值已经修改了
-   */
-  const id = watcher.id
-  if (!has[id]) {
-    queue.push(watcher)
-    has[id] = true
-    if (!pending) {
-      nextTick(flushScheduleQueue, 0)
-      pending = true
+    /**
+     * 如果相同的watcher进来,id保存起来了,就不会执行!has[id]这个里面的东西
+     * 但是这个时候它的值已经修改了
+     */
+    const id = watcher.id
+    if (!has[id]) {
+        queue.push(watcher)
+        has[id] = true
+        if (!pending) {
+            nextTick(flushScheduleQueue, 0)
+            pending = true
+        }
     }
-  }
 }
 /**
  * 导出去之后就能挂载到在vue的实例上
@@ -93,10 +93,10 @@ function queueWatcher(watcher) {
 let callbacks = []
 let waiting = false
 function flushCallBacks() {
-  let cbs = callbacks.slice(0)
-  waiting = false
-  callbacks = []
-  cbs.forEach((cb) => cb())
+    let cbs = callbacks.slice(0)
+    waiting = false
+    callbacks = []
+    cbs.forEach((cb) => cb())
 }
 
 /**
@@ -104,24 +104,24 @@ function flushCallBacks() {
  */
 let timeFunc
 if (Promise) {
-  timeFunc = () => {
-    Promise.resolve().then(flushCallBacks)
-  }
+    timeFunc = () => {
+        Promise.resolve().then(flushCallBacks)
+    }
 } else if (MutationObserve) {
-  const observer = new MutationObserver(flushCallBacks)
-  const textNode = document.createTextNode(1)
-  observer.observe(textNode, {
-    characterData: true
-  })
-  timeFunc = () => {
-    textNode.textContent = 2
-  }
+    const observer = new MutationObserver(flushCallBacks)
+    const textNode = document.createTextNode(1)
+    observer.observe(textNode, {
+        characterData: true
+    })
+    timeFunc = () => {
+        textNode.textContent = 2
+    }
 } else if (setImmediate) {
-  timeFunc = () => {
-    setImmediate(flushCallBacks)
-  }
+    timeFunc = () => {
+        setImmediate(flushCallBacks)
+    }
 } else {
-  setTimeout(flushCallBacks)
+    setTimeout(flushCallBacks)
 }
 
 /**
@@ -135,9 +135,9 @@ if (Promise) {
  * 内部首先使用promise(ie不兼容),MutationObserve,setImmediate,setTimeout
  */
 export function nextTick(cb, delay) {
-  callbacks.push(cb)
-  if (!waiting) {
-    timeFunc()
-    waiting = true
-  }
+    callbacks.push(cb)
+    if (!waiting) {
+        timeFunc()
+        waiting = true
+    }
 }
