@@ -7,7 +7,7 @@ let id = 0
  */
 class Dep {
     static target = null
-      constructor() {
+    constructor() {
         this.id = id++
         this.subs = []
     }
@@ -22,4 +22,13 @@ class Dep {
     }
 }
 
+let stack = []
+export function pushTarget(watcher) {
+    stack.push(watcher)
+    Dep.target = watcher
+}
+export function popTarget() {
+    stack.pop()
+    Dep.target = stack[stack.length - 1]
+}
 export default Dep

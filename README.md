@@ -27,7 +27,10 @@
     ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/nextTick%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0.png)
 
 -   实现 mixin 方法和生命周期功能
--   ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8Emixin.png)
+    ![image](https://github.com/Coder-Yc/mini_vue2/blob/main/image/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8Emixin.png)
+
+-   实现计算属性
+    
 
 ## 使用方法
 

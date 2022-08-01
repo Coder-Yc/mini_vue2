@@ -4,7 +4,9 @@
  * @param vm 传入的vue实例
  */
 
+import Dep from './observe/dep.js'
 import { observer } from './observe/index.js'
+import Watcher from './observe/watch'
 
 export function initState(vm) {
     /**
@@ -15,7 +17,9 @@ export function initState(vm) {
     if (opts.data) {
         initData(vm)
     }
-} 
+
+    initComputed(vm)
+}
 function Proxy(vm, target, key) {
     /**
      * 对每一个key值就行代理,,当访问的时候就去实例上的target上访问
@@ -47,5 +51,35 @@ function initData(vm) {
 
     for (let key in data) {
         Proxy(vm, '_data', key)
+    }
+}
+
+function initComputed(vm) {
+    const compted = vm.$options.computed
+    const watchers = (vm._computedWatchers = {})
+    for (const key in compted) {
+        let userDef = compted[key]
+        const getter = typeof userDef === 'function' ? userDef : userDef.get
+        const setter = userDef.set || (() => {})
+
+        //将属性和watcher对应起来
+        watchers[key] = new Watcher(vm, getter, { lazy: true })
+
+        Object.defineProperty(vm, key, {
+            get: createComputedGetters(vm, key),
+            set: setter
+        })
+    }
+}
+function createComputedGetters(vm, key) {
+    return function () {
+        const watcher = vm._computedWatchers[key]
+        if (watcher.dirty) {
+            watcher.evaluate()
+        }
+        if(Dep.target) {
+            watcher.depend()
+        }
+        return watcher.value
     }
 }

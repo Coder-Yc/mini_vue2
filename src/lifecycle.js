@@ -122,7 +122,8 @@ export function mountComponent(vm, el) {
     const updateComponent = () => {
         vm._update(vm._render())
     }
-    new Watcher(vm, updateComponent, true)
+
+    new Watcher(vm, updateComponent, { lazy: false })
 
     /**
      * 根据虚拟dom产生真实dom

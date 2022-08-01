@@ -9,23 +9,35 @@
 </head>
 
 <body>
-    <div id="app" style="color: red; background-color: pink">{{num}}</div>
+    <div id="app">{{fullName}} {{fullName}} {{fullName}}</div>
 </body>
 <script>
     const vm = new Vue({
         data() {
             return {
-                num: [1, 2, 3, [1, 2]]
+                firstName: 'yang',
+                lastName: 'chong'
             }
         },
-        el: '#app'
+        el: '#app',
+        computed: {
+            fullName() {
+                console.log('run');
+                return this.firstName + this.lastName
+            }
+            // fullName: {
+            //     get() {
+            //         return vm.firstName + vm.lastName
+            //     },
+            //     set(newVal) {
+            //         console.log(newVal);
+            //     }
+            // }
+
+        }
     })
     setTimeout(() => {
-        // vm.num.push(100)
-        // debugger
-        console.log(vm.num);
-        vm.num[3].push(111)
-        // vm.num.__ob__.dep.notify()   //$set原理
+        vm.firstName = 'xxxxxx'
     }, 1000);
 </script>
 

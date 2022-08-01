@@ -80,7 +80,7 @@ function defineReactive(target, key, value) {
         get() {
             //取值的时候会执行get
             if (Dep.target) {
-                if (childOb.dep) {
+                if (childOb) {
                     childOb.dep.depend() //让数组和对象本身都实现对象和数组的依赖
                     // debugger
                     if (Array.isArray(value)) {

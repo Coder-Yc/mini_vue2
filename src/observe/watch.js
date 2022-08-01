@@ -1,4 +1,5 @@
 import Dep from './dep'
+import { pushTarget, popTarget } from './dep'
 let id = 0
 /**
  * 不同组件有不同的watcher
@@ -16,15 +17,30 @@ class Watcher {
         this.getter = fn
         this.deps = []
         this.depsId = new Set()
-        this.get()
+        // debugger
+        this.lazy = options.lazy
+        this.dirty = this.lazy
+        this.vm = vm
+        this.lazy ? undefined : this.get()
     }
     get() {
-        Dep.target = this
-        this.getter()
-        Dep.target = null
+        pushTarget(this)
+        let value = this.getter.call(this.vm)
+        popTarget()
+        return value
+    }
+    depend() {
+        let i = this.deps.length
+        while (i--) {
+            this.deps[i].depend() //让计算属性watcher收集渲染watcher
+        }
+    }
+    evaluate() {
+        this.value = this.get()
+        this.dirty = !this.dirty
     }
     /**
-     * @param {传过来的当前dep} dep
+     * @param {*} dep 传过来的当前dep
      * 这边判断depsId里有没有那个id 如果有就不添加了,
      */
     addDep(dep) {
@@ -36,7 +52,14 @@ class Watcher {
         }
     }
     update() {
-        queueWatcher(this)
+        /**
+         * 如果是计算属性,依赖的值变化了,就标识计算属性是脏值了
+         */
+        if (this.lazy) {
+            this.dirty = true
+        } else {
+            queueWatcher(this)
+        }
     }
     run() {
         console.log('更新了....')
