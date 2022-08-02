@@ -1,7 +1,8 @@
 import { initMixin } from './init'
 import { initLifecycle } from './lifecycle'
-import { nextTick } from './observe/watch.js'
+import Watcher from './observe/watch.js'
 import { initGlobalApi } from './global.js'
+import { initStateMixin } from './State.js'
 
 /**
  * Vue是一个构造函数,我们可以通过原型在构造函数上添加方法
@@ -14,9 +15,11 @@ function Vue(options) {
     //options 就是传入的options api
     this._init(options)
 }
-Vue.prototype.$nextTick = nextTick
 
-initMixin(Vue)
-initLifecycle(Vue)
-initGlobalApi(Vue)
+initMixin(Vue)         //扩展init
+initLifecycle(Vue)     //vm._update  vm._render
+initGlobalApi(Vue)    //全局api
+initStateMixin(Vue)   //nextTick $watch
+ 
+
 export default Vue

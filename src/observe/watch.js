@@ -12,16 +12,23 @@ let id = 0
  * 在触发的过程调用render函数,render函数就会去取那些属性的值,就会触发属性的get,接着去看defineReactive这个函数
  */
 class Watcher {
-    constructor(vm, fn, options) {
+    constructor(vm, expFn, options, cb) {
         this.id = id++
-        this.getter = fn
+        this.getter =
+            typeof expFn === 'string'
+                ? function () {
+                      return vm[expFn]
+                  }
+                : expFn
         this.deps = []
         this.depsId = new Set()
         // debugger
+        this.cb = cb
         this.lazy = options.lazy
         this.dirty = this.lazy
         this.vm = vm
-        this.lazy ? undefined : this.get()
+        this.user = options.user
+        this.value = this.lazy ? undefined : this.get()
     }
     get() {
         pushTarget(this)
@@ -62,8 +69,11 @@ class Watcher {
         }
     }
     run() {
-        console.log('更新了....')
-        this.get()
+        let oldVal = this.value
+        let newVal = this.get()
+        if (this.user) {
+            this.cb.call(this.vm,  newVal, oldVal)
+        }
     }
 }
 export default Watcher

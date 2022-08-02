@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="app">{{fullName}} {{fullName}} {{fullName}}</div>
+    <div id="app">{{firstName}}</div>
 </body>
 <script>
     const vm = new Vue({
@@ -20,21 +20,17 @@
             }
         },
         el: '#app',
-        computed: {
-            fullName() {
-                console.log('run');
-                return this.firstName + this.lastName
+        methods: {
+            fn(newVal, oldVal) {
+                console.log(newVal, oldVal);
             }
-            // fullName: {
-            //     get() {
-            //         return vm.firstName + vm.lastName
-            //     },
-            //     set(newVal) {
-            //         console.log(newVal);
-            //     }
-            // }
-
+        },
+        watch: {
+            firstName() {
+                console.log('ok ');
+            }
         }
+
     })
     setTimeout(() => {
         vm.firstName = 'xxxxxx'

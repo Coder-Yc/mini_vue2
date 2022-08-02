@@ -6,7 +6,7 @@
 
 import Dep from './observe/dep.js'
 import { observer } from './observe/index.js'
-import Watcher from './observe/watch'
+import Watcher, { nextTick } from './observe/watch'
 
 export function initState(vm) {
     /**
@@ -17,8 +17,12 @@ export function initState(vm) {
     if (opts.data) {
         initData(vm)
     }
-
-    initComputed(vm)
+    if (opts.compted) {
+        initComputed(vm)
+    }
+    if (opts.watch) {
+        initWatch(vm)
+    }
 }
 function Proxy(vm, target, key) {
     /**
@@ -77,9 +81,38 @@ function createComputedGetters(vm, key) {
         if (watcher.dirty) {
             watcher.evaluate()
         }
-        if(Dep.target) {
+        if (Dep.target) {
             watcher.depend()
         }
         return watcher.value
+    }
+}
+
+function initWatch(vm) {
+    const watch = vm.$options.watch
+    for (const key in watch) {
+        const handle = watch[key] //数组  函数  字符串
+        if (Array.isArray(handle)) {
+            for (const h of handle) {
+                createWatcher(vm, key, h)
+            }
+        } else {
+            createWatcher(vm, key, handle)
+        }
+    }
+}
+
+function createWatcher(vm, key, handle) {
+    if (typeof handle === 'string') {
+        handle = vm[handle]
+    }
+    return vm.$watch(key, handle)
+}
+
+export function initStateMixin(Vue) {
+    Vue.prototype.$nextTick = nextTick
+    Vue.prototype.$watch = function (expFn, cb) {
+        // console.log(expFn, cb, options)
+        new Watcher(this, expFn, { user: true }, cb)
     }
 }
