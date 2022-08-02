@@ -1,3 +1,13 @@
+function createComponent(vnode) {
+    let data = vnode.data
+    if ((i = i.hook) && (i = i.init)) {
+        i(vnode) //初始化组件
+    }
+    if (vnode.createComponentInstance) {
+        return true
+    }
+}
+
 function createElm(VNode) {
     /**
      * 这个方法用来根据虚拟节点创建真实的节点
@@ -10,7 +20,13 @@ function createElm(VNode) {
      */
     const { tag, data, children, text } = VNode
     if (typeof tag === 'string') {
+        //标签
         // debugger
+
+        if (createComponent(vnode)) {
+            return vnode.createComponentInstance.$el
+        }
+
         VNode.el = document.createElement(tag)
         patchProps(VNode.el, {}, data)
         children.forEach((child) => {
@@ -66,6 +82,10 @@ export function patch(oldVNode, VNode) {
      * 然后再插入到父级节点的最后一个节点中
      * 最后再删除旧的节点,
      */
+
+    if (!oldVNode) {
+        return createElm(vnode)
+    }
     const isRealNode = oldVNode.nodeType
     if (isRealNode) {
         const elm = oldVNode
