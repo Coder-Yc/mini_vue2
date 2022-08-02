@@ -53,6 +53,10 @@ function patchProps(el, oldProps = {}, data = {}) {
     }
 }
 
+function isSameVNode(VNode1, VNode2) {
+    return VNode1.tag === VNode2.tag && VNode1.key === VNode2.key
+}
+
 export function patch(oldVNode, VNode) {
     /**
      * patch这个方法是用来把虚拟节点挂载到真实dom上的
@@ -83,12 +87,12 @@ export function patch(oldVNode, VNode) {
 function patchVNode(oldVNode, VNode) {
     //如果标签节点不相同,就用老节点的父亲节点开始替换
     if (!isSameVNode(oldVNode, VNode)) {
-        let el = createElm(elm)
+        let el = createElm(VNode)
         oldVNode.el.parentNode.replaceChild(el, oldVNode.el)
         return el
     }
     //文本的情况
-    VNode.el = oldVNode.el
+    let el = (VNode.el = oldVNode.el)
     if (!oldVNode.tag) {
         if (oldVNode.text !== VNode.text) {
             oldVNode.el.textContent = VNode.text
@@ -99,7 +103,7 @@ function patchVNode(oldVNode, VNode) {
 
     //比较儿子节点 一方有儿子节点 一方没有儿子节点/两方都有儿子
     let oldChildren = oldVNode.children || []
-    let newChildren = data.children || []
+    let newChildren = VNode.children || []
 
     if (oldChildren.length > 0 && newChildren.length > 0) {
         //完整的diff算法,需要比较两个人的儿子

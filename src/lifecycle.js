@@ -11,8 +11,14 @@ export function initLifecycle(Vue) {
          */
         const vm = this
         const el = vm.$el
-
-        vm.$el = patch(el, VNode)
+        const preVNode = vm._vnode
+        vm._vnode = VNode
+        // debugger
+        if (preVNode) {
+            vm.$el = patch(preVNode, VNode)
+        } else {
+            vm.$el = patch(el, VNode)
+        }
     }
 
     /**

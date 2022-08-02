@@ -42,6 +42,3 @@ function VNode(vm, tag, key, data, children, text) {
     }
 }
 
-function isSameVNode(VNode1, VNode2) {
-    return VNode1 === VNode2 && VNode1.key === VNode2.key
-}
