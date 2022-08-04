@@ -10,9 +10,10 @@
 
 <body>
     <div id="app">
-        <span>{{firstName}}</span>
+        <span>{{fullName}}</span>
     </div>
 </body>
+
 <script>
     const vm = new Vue({
         data() {
@@ -22,21 +23,13 @@
             }
         },
         el: '#app',
-        methods: {
-            fn(newVal, oldVal) {
-                console.log(newVal, oldVal);
-            }
-        },
-        watch: {
-            firstName() {
-                console.log('ok ');
+        computed: {
+            fullName: function () {
+                return this.firstName + this.lastName
             }
         }
 
     })
-    setTimeout(() => {
-        vm.firstName = 'xxxxxx'
-    }, 1000);
 </script>
 
 </html>

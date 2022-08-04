@@ -17,7 +17,8 @@ export function initState(vm) {
     if (opts.data) {
         initData(vm)
     }
-    if (opts.compted) {
+    debugger
+    if (opts.computed) {
         initComputed(vm)
     }
     if (opts.watch) {
@@ -58,11 +59,20 @@ function initData(vm) {
     }
 }
 
+/**
+ * 在这里拿到computed去遍历
+ * 把当前的computed通过一个变量userDef来保存
+ * 然后再拿到getter和setter,getter就是用过调用当前userDef这个函数
+ * 然后将当前属性和watcher对应起来放到watchers里面
+ * 这个Watcher传过去实例,需要立即执行的getter,和懒加载
+ *
+ */
+
 function initComputed(vm) {
-    const compted = vm.$options.computed
+    const computed = vm.$options.computed
     const watchers = (vm._computedWatchers = {})
-    for (const key in compted) {
-        let userDef = compted[key]
+    for (const key in computed) {
+        let userDef = computed[key]
         const getter = typeof userDef === 'function' ? userDef : userDef.get
         const setter = userDef.set || (() => {})
 
@@ -75,10 +85,19 @@ function initComputed(vm) {
         })
     }
 }
+/**
+ * createComputedGetters重写getter
+ * 目的是为了检验值是否是脏值,首次调用是脏的,去调用watcher上面的计算方法
+ * 那个计算方法会去调用默认的方法,调用默认的方法还会把当前watcher推入dep栈中
+ * 同时修改dirty为false
+ *
+ *
+ */
 function createComputedGetters(vm, key) {
     return function () {
         const watcher = vm._computedWatchers[key]
         if (watcher.dirty) {
+            debugger
             watcher.evaluate()
         }
         if (Dep.target) {
@@ -87,7 +106,6 @@ function createComputedGetters(vm, key) {
         return watcher.value
     }
 }
-
 function initWatch(vm) {
     const watch = vm.$options.watch
     for (const key in watch) {

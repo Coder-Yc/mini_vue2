@@ -14,6 +14,11 @@ let id = 0
 class Watcher {
     constructor(vm, expFn, options, cb) {
         this.id = id++
+        /**
+         * 这里用一层包裹主要是为了有computed是字符串的情况,
+         * 如果是,就包裹一层函数在vm的实例上(methods)去查找
+         * 
+         */
         this.getter =
             typeof expFn === 'string'
                 ? function () {
@@ -22,7 +27,6 @@ class Watcher {
                 : expFn
         this.deps = []
         this.depsId = new Set()
-        // debugger
         this.cb = cb
         this.lazy = options.lazy
         this.dirty = this.lazy
