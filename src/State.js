@@ -17,11 +17,11 @@ export function initState(vm) {
     if (opts.data) {
         initData(vm)
     }
-    debugger
     if (opts.computed) {
         initComputed(vm)
     }
     if (opts.watch) {
+        debugger
         initWatch(vm)
     }
 }
@@ -71,12 +71,14 @@ function initData(vm) {
 function initComputed(vm) {
     const computed = vm.$options.computed
     const watchers = (vm._computedWatchers = {})
+
     for (const key in computed) {
         let userDef = computed[key]
         const getter = typeof userDef === 'function' ? userDef : userDef.get
         const setter = userDef.set || (() => {})
 
         //将属性和watcher对应起来
+
         watchers[key] = new Watcher(vm, getter, { lazy: true })
 
         Object.defineProperty(vm, key, {
@@ -90,16 +92,28 @@ function initComputed(vm) {
  * 目的是为了检验值是否是脏值,首次调用是脏的,去调用watcher上面的计算方法
  * 那个计算方法会去调用默认的方法,调用默认的方法还会把当前watcher推入dep栈中
  * 同时修改dirty为false
+ * 主要思路就是当前计算属性watcher已经记住两个dep,但是想要dep能更新,还需要dep记住外层的渲染watcher
+ * 然后在挂载的时候访问到计算属性,就调用这个getter,就把这个计算属性里的两个dep与渲染watcher关联
+ * 主要就是调用watcher.depend()这个方法让渲染watcher和计算属性的dep相互记住
  *
- *
+ * 当有依赖的属性值发生变化时,dep会调用notify去通知dep数组中装的watchers(计算属性和视图)去update
+ * update里会去看是不是计算属性依赖的值,如果是就把当前计算属性改为脏值,就算是已经更新
+ * 接下来要 做的就是更行视图,每次修改数据后去更新视图的时候都会去重新调用get方法,然后就去调用这个getter
+ * 调用getter后就会去重新计算值
  */
 function createComputedGetters(vm, key) {
     return function () {
         const watcher = vm._computedWatchers[key]
+        /**
+         * 这里是脏值检测,如果是脏就去计算当前计算属性watcher的值
+         * evaluate会在当前watcher上挂载计算的值,同时把dirty修改为false
+         */
         if (watcher.dirty) {
-            debugger
             watcher.evaluate()
         }
+        /**
+         * 这里就来把计算属性watcher里依赖的dep都与视图watcher挂钩
+         */
         if (Dep.target) {
             watcher.depend()
         }
@@ -109,6 +123,10 @@ function createComputedGetters(vm, key) {
 function initWatch(vm) {
     const watch = vm.$options.watch
     for (const key in watch) {
+        /**
+         * 这里判断是数组还是函数或者字符串的情况
+         * 是数组就循环拿到里面的对象
+         */
         const handle = watch[key] //数组  函数  字符串
         if (Array.isArray(handle)) {
             for (const h of handle) {
@@ -121,6 +139,10 @@ function initWatch(vm) {
 }
 
 function createWatcher(vm, key, handle) {
+    /**
+     * 这里处理的是watcher是字符串的情况
+     * 如果是字符串就说明是
+     */
     if (typeof handle === 'string') {
         handle = vm[handle]
     }

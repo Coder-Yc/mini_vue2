@@ -17,7 +17,7 @@ class Watcher {
         /**
          * 这里用一层包裹主要是为了有computed是字符串的情况,
          * 如果是,就包裹一层函数在vm的实例上(methods)去查找
-         * 
+         *
          */
         this.getter =
             typeof expFn === 'string'
@@ -41,6 +41,7 @@ class Watcher {
         return value
     }
     depend() {
+    
         let i = this.deps.length
         while (i--) {
             this.deps[i].depend() //让计算属性watcher收集渲染watcher
@@ -76,7 +77,7 @@ class Watcher {
         let oldVal = this.value
         let newVal = this.get()
         if (this.user) {
-            this.cb.call(this.vm,  newVal, oldVal)
+            this.cb.call(this.vm, newVal, oldVal)
         }
     }
 }

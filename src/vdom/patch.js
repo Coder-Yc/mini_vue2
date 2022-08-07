@@ -1,5 +1,5 @@
 function createComponent(vnode) {
-    let data = vnode.data
+    let i = vnode.data
     if ((i = i.hook) && (i = i.init)) {
         i(vnode) //初始化组件
     }
@@ -23,8 +23,8 @@ function createElm(VNode) {
         //标签
         // debugger
 
-        if (createComponent(vnode)) {
-            return vnode.createComponentInstance.$el
+        if (createComponent(VNode)) {
+            return VNode.createComponentInstance.$el
         }
 
         VNode.el = document.createElement(tag)
@@ -219,7 +219,7 @@ function updateChildren(el, oldChildren, newChildren) {
         //老的多余的就删除
         for (let i = oldStartIndex; i < newEndIndex; i++) {
             if (oldChildren[i]) {
-                el.removeChild(oldChildren[i].el)
+                el.removeChild(oldChildren[i].el)           
             }
         }
     }

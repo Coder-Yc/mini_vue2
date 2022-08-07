@@ -3,7 +3,7 @@
  * 传过来的属性值attrs就是这个data,key值一般也放到这个里面
  */
 function isReserveTag(tag) {
-    return ['div', 'p', 'ul', 'li'].includes(tag)
+    return ['div', 'p', 'ul', 'li', 'span'].includes(tag)
 }
 
 export function createElementVNode(vm, tag, data, ...children) {
@@ -30,8 +30,10 @@ function createComponentVNode(vm, tag, key, data, children, Ctor) {
     }
     data.hook = {
         init(vnode) {
-            let instance = vnode.componentInstance = new vnode.componentOptions.Ctor
-            instance.$mount() 
+            // debugger
+            let instance = (vnode.componentInstance =
+                new vnode.componentOptions.Ctor())
+            instance.$mount()
         }
     }
     return VNode(vm, tag, key, data, children, null, { Ctor })

@@ -23,13 +23,17 @@
             }
         },
         el: '#app',
-        computed: {
-            fullName: function () {
-                return this.firstName + this.lastName
+        watch: {
+            firstName: function () {
+                console.log('111');
             }
         }
 
     })
+    setTimeout(() => {
+
+        vm.firstName = 'xxx'
+    }, 1000);
 </script>
 
 </html>
