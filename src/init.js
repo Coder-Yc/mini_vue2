@@ -33,6 +33,8 @@ export function initMixin(Vue) {
          */
         let vm = this
         el = document.querySelector(el)
+
+        // debugger
         let ops = vm.$options
         if (!ops.render) {
             let template

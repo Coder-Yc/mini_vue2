@@ -3,7 +3,7 @@
  * 传过来的属性值attrs就是这个data,key值一般也放到这个里面
  */
 function isReserveTag(tag) {
-    return ['div', 'p', 'ul', 'li', 'span'].includes(tag)
+    return ['div', 'p', 'ul', 'li', 'span', 'button'].includes(tag)
 }
 
 export function createElementVNode(vm, tag, data, ...children) {
@@ -18,8 +18,7 @@ export function createElementVNode(vm, tag, data, ...children) {
         return VNode(vm, tag, data.key, data, children)
     } else {
         //创造一个虚拟节点(包含组件的构造函数)
-        let Ctor = vm.$options.components[tag] //组件的构造函数
-
+        let Ctor = vm.$options.component[tag] //组件的构造函数
         return createComponentVNode(vm, tag, key, data, children, Ctor)
     }
 }
@@ -28,9 +27,11 @@ function createComponentVNode(vm, tag, key, data, children, Ctor) {
     if (typeof Ctor === 'object') {
         Ctor = vm.$options._base.extend(Ctor)
     }
+    // 在虚拟节点上定义一个钩子函数,一会创建真实节点的时候调用他挂载
     data.hook = {
         init(vnode) {
-            // debugger
+            //稍后调用组件真实节点的时候,如果调用就用调用这个方法
+            //保存组件的实例挂载到虚拟节点上
             let instance = (vnode.componentInstance =
                 new vnode.componentOptions.Ctor())
             instance.$mount()
@@ -65,6 +66,6 @@ function VNode(vm, tag, key, data, children, text, componentOptions) {
         data,
         children,
         text,
-        componentOptions
+        componentOptions //组件的构造函数
     }
 }

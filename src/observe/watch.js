@@ -17,7 +17,6 @@ class Watcher {
         /**
          * 这里用一层包裹主要是为了有computed是字符串的情况,
          * 如果是,就包裹一层函数在vm的实例上(methods)去查找
-         *
          */
         this.getter =
             typeof expFn === 'string'
@@ -41,7 +40,6 @@ class Watcher {
         return value
     }
     depend() {
-    
         let i = this.deps.length
         while (i--) {
             this.deps[i].depend() //让计算属性watcher收集渲染watcher
@@ -70,6 +68,13 @@ class Watcher {
         if (this.lazy) {
             this.dirty = true
         } else {
+            /**
+             * 多次更新,例如nextTick里触发更新,多次调用update应该就要把它放入到一个队列中
+             * 调用queueWatcher函数后,会判断有没有存放过当前watcher的id,没有就把它放到队列中去
+             * 在第一次任务的时候开启任务,然后把等待标志关闭,使用nextTick开启一个队列
+             * 
+             *
+             */
             queueWatcher(this)
         }
     }
@@ -95,12 +100,12 @@ export default Watcher
 
 let queue = []
 let has = {}
-let pending = false
+let pending = false //相当于防抖
 //刷新操作
 function flushScheduleQueue() {
     let flushQueue = queue.slice(0)
-    queue = []
-    has = {}
+    let queue = []
+    let has = {}
     pending = false
     for (let i = 0; i < flushQueue.length; i++) {
         flushQueue[i].run()
@@ -111,6 +116,7 @@ function queueWatcher(watcher) {
     /**
      * 如果相同的watcher进来,id保存起来了,就不会执行!has[id]这个里面的东西
      * 但是这个时候它的值已经修改了
+     * 相当于最后无论调用多少次update,都只调用一次nextTick做刷新操作
      */
     const id = watcher.id
     if (!has[id]) {
@@ -126,14 +132,11 @@ function queueWatcher(watcher) {
  * 导出去之后就能挂载到在vue的实例上
  * 这样,用户调用nextTick和内部调用的nextTick都是同一个
  * 至于优先级就是看修改的操作和调用的实例的nextTick谁在前面
- *
  */
 let callbacks = []
 let waiting = false
 function flushCallBacks() {
     let cbs = callbacks.slice(0)
-    waiting = false
-    callbacks = []
     cbs.forEach((cb) => cb())
 }
 

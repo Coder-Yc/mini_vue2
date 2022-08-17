@@ -1,39 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-</head>
+    <body>
+        <div id="app">
+            <div>111</div>
+            2222222
+        </div>
+    </body>
 
-<body>
-    <div id="app">
-        <span>{{fullName}}</span>
-    </div>
-</body>
-
-<script>
-    const vm = new Vue({
-        data() {
-            return {
-                firstName: 'yang',
-                lastName: 'chong'
-            }
-        },
-        el: '#app',
-        watch: {
-            firstName: function () {
-                console.log('111');
-            }
-        }
-
-    })
-    setTimeout(() => {
-
-        vm.firstName = 'xxx'
-    }, 1000);
-</script>
-
+    <script src="./vue.js"></script>
+    <script>
+        new Vue({ el: '#app' })
+    </script>
 </html>

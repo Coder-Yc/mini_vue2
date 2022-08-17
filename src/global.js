@@ -13,6 +13,9 @@ export function initGlobalApi(Vue) {
         return this
     }
 
+    /**
+     * 可以手动创造组件进行挂载
+     */
     Vue.extend = function (options) {
         //根据用户的参数返回一个构造函数
         function Sub(options = {}) {
@@ -25,12 +28,13 @@ export function initGlobalApi(Vue) {
         Sub.options = mergeOptions(Vue.options, options)
         return Sub
     }
-    Vue.options.components = {} //全局的指令 Vue.options.directives
+    Vue.options.component = {} //全局的指令 Vue.options.directives
     Vue.component = function (id, definition) {
+    
         definition =
             typeof definition === 'function'
                 ? definition
                 : Vue.extend(definition)
-        Vue.options.components[id] = definition
+        Vue.options.component[id] = definition
     }
 }

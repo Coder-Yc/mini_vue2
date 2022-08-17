@@ -21,7 +21,7 @@ export function initState(vm) {
         initComputed(vm)
     }
     if (opts.watch) {
-        debugger
+
         initWatch(vm)
     }
 }

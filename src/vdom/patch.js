@@ -1,18 +1,21 @@
+/**
+ * 拿到虚拟节点上的hook
+ */
 function createComponent(vnode) {
     let i = vnode.data
+
     if ((i = i.hook) && (i = i.init)) {
-        i(vnode) //初始化组件
+        i(vnode) //初始化组件,这里会调用勾子去挂载
     }
-    if (vnode.createComponentInstance) {
+    if (vnode.componentInstance) {
         return true
     }
 }
-
 function createElm(VNode) {
     /**
      * 这个方法用来根据虚拟节点创建真实的节点
      * 首先拿到虚拟节点中的标签,属性,孩子节点和文本
-     * 然后判断标签是不是字符串,如果是就说明是一个文本标签,否则就是一个文本标签
+     * 然后判断标签是不是字符串,如果是就说明是一个文本标签,否则就是一个标签节点
      * 如果标签节点,首先创建一个标签挂载到虚拟dom的el上,为了让虚拟dom和真实dom练习起来
      * 然后再去调用patchProps挂载属性
      * 最后遍历孩子节点,递归的创建孩子节点,把这个孩子节点插入到VNode.el里
@@ -21,12 +24,11 @@ function createElm(VNode) {
     const { tag, data, children, text } = VNode
     if (typeof tag === 'string') {
         //标签
-        // debugger
-
+        //创建真实元素,也要区分是组件还是元素
         if (createComponent(VNode)) {
-            return VNode.createComponentInstance.$el
+            return VNode.componentInstance.$el
         }
-
+        // 挂载到虚拟节点上的el上,一会返回
         VNode.el = document.createElement(tag)
         patchProps(VNode.el, {}, data)
         children.forEach((child) => {
@@ -37,6 +39,7 @@ function createElm(VNode) {
     }
     return VNode.el
 }
+
 function patchProps(el, oldProps = {}, data = {}) {
     /**
      * 老的属性中有要需要删除的属性
@@ -68,11 +71,9 @@ function patchProps(el, oldProps = {}, data = {}) {
         }
     }
 }
-
 function isSameVNode(VNode1, VNode2) {
     return VNode1.tag === VNode2.tag && VNode1.key === VNode2.key
 }
-
 export function patch(oldVNode, VNode) {
     /**
      * patch这个方法是用来把虚拟节点挂载到真实dom上的
@@ -82,14 +83,16 @@ export function patch(oldVNode, VNode) {
      * 然后再插入到父级节点的最后一个节点中
      * 最后再删除旧的节点,
      */
-
     if (!oldVNode) {
-        return createElm(vnode)
+        //组件的挂载
+        debugger
+        return createElm(VNode)
     }
     const isRealNode = oldVNode.nodeType
     if (isRealNode) {
         const elm = oldVNode
         const parentElm = elm.parentNode
+
         let newElm = createElm(VNode)
         parentElm.insertBefore(newElm, parentElm.nextSibling)
         parentElm.removeChild(elm)
@@ -103,7 +106,6 @@ export function patch(oldVNode, VNode) {
         return patchVNode(oldVNode, VNode)
     }
 }
-
 function patchVNode(oldVNode, VNode) {
     //如果标签节点不相同,就用老节点的父亲节点开始替换
     if (!isSameVNode(oldVNode, VNode)) {
@@ -134,13 +136,11 @@ function patchVNode(oldVNode, VNode) {
         el.innerHtml = ''
     }
 }
-
 function mountChildren(el, newChildren) {
     newChildren.forEach((elm) => {
         el.appendChild(createElm(elm))
     })
 }
-
 function updateChildren(el, oldChildren, newChildren) {
     let oldStartIndex = 0
     let newStartIndex = 0
@@ -219,7 +219,7 @@ function updateChildren(el, oldChildren, newChildren) {
         //老的多余的就删除
         for (let i = oldStartIndex; i < newEndIndex; i++) {
             if (oldChildren[i]) {
-                el.removeChild(oldChildren[i].el)           
+                el.removeChild(oldChildren[i].el)
             }
         }
     }

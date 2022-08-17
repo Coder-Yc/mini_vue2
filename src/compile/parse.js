@@ -184,5 +184,6 @@ export function parseHtml(template) {
             }
         }
     }
+    console.log(root)
     return root
 }

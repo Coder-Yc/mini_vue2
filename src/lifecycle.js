@@ -9,6 +9,7 @@ export function initLifecycle(Vue) {
          * 里面的patch函数既有初始化的功能,又有更新的功能
          * 让patch函数有个返回值,就能把这次的最新的节点放到vm.$el,下次更新就能取到这个el
          */
+
         const vm = this
         const el = vm.$el
         const preVNode = vm._vnode
@@ -46,6 +47,7 @@ export function initLifecycle(Vue) {
         /**
          * 通过render函数生成虚拟dom
          * 调用call为了让with中的this指向vm
+         * 如果是组件就创建组件的虚拟节点到上层节点中
          * * @return 一个由render函数产生的虚拟dom
          */
         const vm = this
@@ -62,6 +64,7 @@ export function mountComponent(vm, el) {
      * 剩下的事都在Watcher的类里去做
      */
     const updateComponent = () => {
+        debugger
         vm._update(vm._render())
     }
 
