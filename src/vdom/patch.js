@@ -102,7 +102,6 @@ export function patch(oldVNode, VNode) {
         /**
          * diff算法
          */
-
         return patchVNode(oldVNode, VNode)
     }
 }
@@ -129,6 +128,13 @@ function patchVNode(oldVNode, VNode) {
 
     if (oldChildren.length > 0 && newChildren.length > 0) {
         //完整的diff算法,需要比较两个人的儿子
+        /**
+         * 在同级的时候, 老得节点序列和新的都有开始和结束的指针,当开始指针小于结束指针时,会循环去比较,
+         * 当新的开始指针小于新的结束的时候,就把新的剩余的添加到老节点上,反之如果是老得话,那就把老的砍掉
+         * 循环里面有四种查找方法,如果交叉比对找到时那就去插入到前面或者后面,然后再递归去patch
+         * 最后找不到时,就去乱序查找,维护了一个map,根据node的key去查找,找到就插入,找不到就创建
+         * 这也是为什么需要key的原因,能更快更准确的查找到
+         */
         updateChildren(el, oldChildren, newChildren)
     } else if (newChildren.length > 0) {
         mountChildren(el, newChildren)

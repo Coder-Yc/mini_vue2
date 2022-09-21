@@ -47,7 +47,6 @@ function initData(vm) {
      * 然后调用observer来处理响应式,完成之后数据就完成响应式处理了
      * 然后再代理vm上的数据,使得vm._data = vm
      * 遍历data里的数据去调用proxy方法并传过去实例,_data,key
-     *
      */
     let data = vm.$options.data
     data = typeof data === 'function' ? data.call(vm) : data
@@ -65,9 +64,18 @@ function initData(vm) {
  * 然后再拿到getter和setter,getter就是用过调用当前userDef这个函数
  * 然后将当前属性和watcher对应起来放到watchers里面
  * 这个Watcher传过去实例,需要立即执行的getter,和懒加载
- *
  */
 
+/**
+ * computed原理q:
+ * 通俗一点就是
+ * 一开始merger完options,然后去拿到computed里每一个值,给每一个key值都设置一个getter,每当页面通过render时都会去调用哪个getter,
+ * 当第一个进去时是脏值,然后就去调用当前watcher的evaluate计算方法,他回去调用一开始new watcher时传过去getter,然后返回一个值,再返回那个值
+ * 然后判断当前的Dep全局属性有没有watcher,如果有,就要吧计算属性依赖的dep都把视图的watcher保存起来,因为计算属性watcher没有保存渲染watcher的功能
+ * 所以当属性值发生变化,就去通知计算属性和渲染watcher都发生变化
+ * 
+ * @param {*} vm 
+ */
 function initComputed(vm) {
     const computed = vm.$options.computed
     const watchers = (vm._computedWatchers = {})
@@ -113,6 +121,7 @@ function createComputedGetters(vm, key) {
         }
         /**
          * 这里就来把计算属性watcher里依赖的dep都与视图watcher挂钩
+         * watcher是一个栈,计算属性出栈后当前全局变量就是渲染watcher,然后让dep记住渲染watcher
          */
         if (Dep.target) {
             watcher.depend()
@@ -120,6 +129,13 @@ function createComputedGetters(vm, key) {
         return watcher.value
     }
 }
+
+/**
+ * initState的时候就去initWatch,去处理不同情况的watcher, 字符串, array, watcher调用$watcher, 然后会去new 一个watcher并传入参数,
+ * 是一个用户自定义的watcher,然后去去实例上取值触发get收集以来,然后,每当传过去的值发生变化时,都会调用watcher的run方法,里面判断是不是用户watcher,
+ * 是的话就调用那个回调函数,传入新旧值
+ * @param {*} vm 
+ */
 function initWatch(vm) {
     const watch = vm.$options.watch
     for (const key in watch) {

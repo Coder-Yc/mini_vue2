@@ -17,7 +17,7 @@ export function createElementVNode(vm, tag, data, ...children) {
     if (isReserveTag(tag)) {
         return VNode(vm, tag, data.key, data, children)
     } else {
-        //创造一个虚拟节点(包含组件的构造函数)
+        //创造一个带有构造函数的虚拟节点(包含组件的构造函数)
         let Ctor = vm.$options.component[tag] //组件的构造函数
         return createComponentVNode(vm, tag, key, data, children, Ctor)
     }
@@ -34,7 +34,7 @@ function createComponentVNode(vm, tag, key, data, children, Ctor) {
             //保存组件的实例挂载到虚拟节点上
             let instance = (vnode.componentInstance =
                 new vnode.componentOptions.Ctor())
-            instance.$mount()
+            instance.$mount()       
         }
     }
     return VNode(vm, tag, key, data, children, null, { Ctor })

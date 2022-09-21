@@ -87,6 +87,7 @@ function defineReactive(target, key, value) {
                         dependArray(value)
                     }
                 }
+                //让当前watcher记住依赖的dep并且让当前dep记住当前watcher
                 dep.depend()
             }
             return value

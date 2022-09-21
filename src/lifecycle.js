@@ -9,7 +9,6 @@ export function initLifecycle(Vue) {
          * 里面的patch函数既有初始化的功能,又有更新的功能
          * 让patch函数有个返回值,就能把这次的最新的节点放到vm.$el,下次更新就能取到这个el
          */
-
         const vm = this
         const el = vm.$el
         const preVNode = vm._vnode
